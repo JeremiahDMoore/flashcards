@@ -1,21 +1,47 @@
-// Import the functions you need from the SDKs you need
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
 import { initializeApp } from "firebase/app";
-
 import { getAuth } from "firebase/auth";
+// added from 'firebase.js' in working auth demo
+// import firebase from 'firebase';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDZvvvZJ6uPvYmtO2h4FcyoW0TGIWauc6o",
-  authDomain: "fir-auth-example-d4e79.firebaseapp.com",
-  projectId: "fir-auth-example-d4e79",
-  storageBucket: "fir-auth-example-d4e79.appspot.com",
-  messagingSenderId: "538668208169",
-  appId: "1:538668208169:web:cf693226bb705cedd94c38"
+  apiKey: "AIzaSyAugHDD318l6Ro1AUWNyU7xllmkEPEBrS8",
+  authDomain: "rncrud-2d9e3.firebaseapp.com",
+  projectId: "rncrud-2d9e3",
+  storageBucket: "rncrud-2d9e3.appspot.com",
+  messagingSenderId: "1016080484295",
+  appId: "1:1016080484295:web:da63484a30b05a029e3be2",
+  measurementId: "G-HPP928FH71"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = firebase.firestore();
 
-export { auth };
+export { firebase, auth, db };
+
+
+// import { initializeApp } from "firebase/app";
+// import { getAuth, GoogleAuthProvider } from "firebase/auth";
+// import { getFirestore } from "firebase/firestore";
+// import { getStorage } from "firebase/storage";
+
+// const firebaseConfig = {
+//   apiKey: "AIzaSyAlztMMVXKXA5oSVpwe0XthJ6TWNe31BSo",
+//   authDomain: "fir-course-beba9.firebaseapp.com",
+//   projectId: "fir-course-beba9",
+//   storageBucket: "fir-course-beba9.appspot.com",
+//   messagingSenderId: "236316955671",
+//   appId: "1:236316955671:web:2b18d92e1b6644fae3f852",
+//   measurementId: "G-HENJ7D82KH",
+// };
+
+// const app = initializeApp(firebaseConfig);
+// export const auth = getAuth(app);
+// export const googleProvider = new GoogleAuthProvider();
+
+// export const db = getFirestore(app);
+// export const storage = getStorage(app);
