@@ -5,7 +5,7 @@ function MyBtn({ text, onPress }) {
   return (
     <TouchableOpacity
       style={{
-        backgroundColor: "blue",
+        backgroundColor: "#43A3CC",
         padding: 10,
         borderRadius: 999,
         width: "80%",
@@ -17,6 +17,7 @@ function MyBtn({ text, onPress }) {
       <Text
         style={{
           color: "white",
+          fontWeight: "bold",
           textAlign: "center",
         }}
       >

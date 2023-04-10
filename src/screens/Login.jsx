@@ -54,11 +54,12 @@ export default function Login({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Login Screen</Text>
+      <Text style={{ color: "#fff", fontSize: 30 }}>Login {'\n'}</Text>
 
       <MyTextInput
         value={email}
         placeholder={"Email"}
+        backgroundColor={"#fff"}
         onChange={(e) => {
           setEmail(e);
         }}

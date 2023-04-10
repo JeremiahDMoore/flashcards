@@ -7,6 +7,7 @@ function MyTextInput({ value, onChange, placeholder }) {
       style={{
         borderWidth: 1,
         borderColor: "black",
+        backgroundColor: "#f0f0f0",
         width: "80%",
         borderRadius: 999,
         padding: 10,

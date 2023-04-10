@@ -1,131 +1,161 @@
+// import React, { useState, useEffect } from 'react';
+// import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+// import { collection, onSnapshot, query } from 'firebase/firestore';
+// import { db } from '../utils/firebase';
+
+// const DecksScreen = () => {
+//   const [decks, setDecks] = useState([]);
+
+//   useEffect(() => {
+//     const decksCollectionRef = collection(db, 'decks');
+//     const decksQuery = query(decksCollectionRef);
+
+//     const unsubscribe = onSnapshot(decksQuery, (querySnapshot) => {
+//       const decksData = [];
+
+//       querySnapshot.forEach((documentSnapshot) => {
+//         decksData.push({
+//           ...documentSnapshot.data(),
+//           key: documentSnapshot.id,
+//         });
+//       });
+
+//       setDecks(decksData);
+//     });
+
+//     return unsubscribe;
+//   }, []);
+
+//   const renderDeck = ({ item }) => (
+//     <TouchableOpacity
+//       style={styles.item}
+//       onPress={() => {
+//         console.log(`Deck with id ${item.key} pressed`);
+//       }}>
+//       <Text style={styles.title}>{item.question}</Text>
+//     </TouchableOpacity>
+//   );
+
+//   return (
+//     <View style={styles.container}>
+//       <FlatList data={decks} renderItem={renderDeck} />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     backgroundColor: '#0E2431',
+//   },
+//   item: {
+//     backgroundColor: '#EBF8FF',
+//     padding: 20,
+//     marginVertical: 8,
+//     marginHorizontal: 16,
+//     borderRadius: 10,
+//   },
+//   title: {
+//     fontSize: 22,
+//     textAlign: 'center',
+//   },
+// });
+
+// export default DecksScreen;
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
-import { app, auth, db } from '../utils/firebase';
+import { View, Text, StyleSheet, Button } from 'react-native';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db, auth } from '../utils/firebase';
 
 const DecksScreen = () => {
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [currentDoc, setCurrentDoc] = useState(null);
-  const [previousDoc, setPreviousDoc] = useState(null);
-  const [next, setNext] = useState(true);
+  const [decks, setDecks] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    // const db = firebase.firestore();
-    db.collection('decks')
-      .orderBy('date', 'desc')
-      .limit(1)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          setQuestion(doc.data().question);
-          setAnswer(doc.data().answer);
-          setCurrentDoc(doc);
+    const fetchDecks = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        const decksRef = collection(db, `users/${user.uid}/decks`);
+        const q = query(decksRef);
+        const querySnapshot = await getDocs(q);
+        const deckList = querySnapshot.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() };
         });
-      })
-      .catch(error => console.log(error));
+        setDecks(deckList);
+      }
+    };
+
+    fetchDecks();
   }, []);
 
-  const handleShowAnswer = () => {
-    setShowAnswer(true);
+  const currentDeck = decks[currentIndex];
+
+  const showAnswer = () => {
+    const updatedDeck = { ...currentDeck, showAnswer: true };
+    const updatedDecks = [...decks];
+    updatedDecks[currentIndex] = updatedDeck;
+    setDecks(updatedDecks);
   };
 
-  const handleNextQuestion = () => {
-    // const db = firebase.firestore();
-    db.collection('decks')
-      .orderBy('date', 'desc')
-      .startAfter(currentDoc)
-      .limit(1)
-      .get()
-      .then(querySnapshot => {
-        if (querySnapshot.docs.length > 0) {
-          querySnapshot.forEach(doc => {
-            setQuestion(doc.data().question);
-            setAnswer(doc.data().answer);
-            setPreviousDoc(currentDoc);
-            setCurrentDoc(doc);
-            setShowAnswer(false);
-            setNext(true)
-          });
-        } else {
-          setNext(false);
-        }
-      })
-      .catch(error => console.log(error));
+  const nextQuestion = () => {
+    setCurrentIndex(currentIndex + 1);
   };
 
-  const handlePreviousQuestion = () => {
-    if (previousDoc) {
-      // const db = firebase.firestore();
-      db.collection('decks')
-        .orderBy('date', 'desc')
-        .endBefore(currentDoc)
-        .limit(1)
-        .get()
-        .then(querySnapshot => {
-          if (querySnapshot.docs.length > 0) {
-            querySnapshot.forEach(doc => {
-              setQuestion(doc.data().question);
-              setAnswer(doc.data().answer);
-              setCurrentDoc(doc);
-              setPreviousDoc(null);
-              setShowAnswer(false);
-              setNext(true);
-            });
-          } else {
-            setNext(false)
-          }
-        })
-        .catch(error => console.log(error));
-    }
+  const startOver = () => {
+    setCurrentIndex(0);
+    const updatedDecks = decks.map((deck) => ({ ...deck, showAnswer: false }));
+    setDecks(updatedDecks);
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Text style={styles.textQ}>{question}</Text>
-        {showAnswer && <Text style={styles.textA}>{answer}</Text>}
-        {!showAnswer && (
-          <Button title="Show Answer" onPress={handleShowAnswer} />
-        )}
-        {previousDoc && showAnswer && (
-          <Button title="Start Over" onPress={handlePreviousQuestion} />
-        )}
-        {showAnswer && currentDoc && (
-          <Button title="Next Question" onPress={handleNextQuestion} />
-        )}
-        {showAnswer && currentDoc && next === false && (
-          <Text style={styles.textN}>No more questions</Text>
-        )}
-      </View>
-    </TouchableWithoutFeedback>
+    <View style={styles.container}>
+      {decks.length === 0 && (
+        <Text style={styles.message}>You have no decks yet</Text>
+      )}
+      {decks.length > 0 && currentDeck && (
+        <View>
+          <Text style={styles.title}>{currentDeck.question}</Text>
+          {currentDeck.showAnswer && (
+            <Text style={styles.description}>{currentDeck.answer}</Text>
+          )}
+          {!currentDeck.showAnswer && (
+            <Button title="Show Answer" onPress={showAnswer} />
+          )}
+        </View>
+      )}
+      {decks.length > 1 && currentIndex < decks.length - 1 && (
+        <Button title="Next Question" onPress={nextQuestion} />
+      )}
+      {currentIndex === decks.length - 1 && (
+        <Button title="Start Over" onPress={startOver} />
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0E2431',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#0E2431',
   },
-  textQ: {
-    padding: 20,
-    fontSize: 24,
-    marginBottom: 20,
-    color: '#fff',
-
+  message: {
+    fontSize: 18,
+    color: 'white',
   },
-  textA: {
+  title: {
     fontSize: 24,
-    marginBottom: 20,
-    color: '#57f542',
+    fontWeight: 'bold',
+    color: 'white',
   },
-  textN: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: 'red',
-  }
+  description: {
+    fontSize: 18,
+    color: 'white',
+    marginTop: 10,
+  },
 });
 
 export default DecksScreen;
