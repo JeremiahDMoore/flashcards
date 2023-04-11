@@ -75,7 +75,7 @@
 
 // export default AddScreen;
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import { doc, setDoc, serverTimestamp, collection, addDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../utils/firebase';
@@ -83,28 +83,42 @@ import { auth, db } from '../utils/firebase';
 const AddScreen = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
+  const [deckTitle, setDeckTitle] = useState('');
+
   const [user] = useAuthState(auth);
 
   const handleAddDeck = async () => {
-    try {
-      const decksCollectionRef = collection(db, `users/${user.uid}/decks`);
-      const newDeckRef = await addDoc(decksCollectionRef, {
-        question: question,
-        answer: answer,
-        date: serverTimestamp(),
-      });
+    if (question === '' || answer === '' || deckTitle === '') {
+      Alert.alert('Error', 'Please enter question, answer, and deck title');
+    } else {
+      try {
+        const decksCollectionRef = collection(db, `users/${user.uid}/decks`);
+        const newDeckRef = await addDoc(decksCollectionRef, {
+          question: question,
+          answer: answer,
+          date: serverTimestamp(),
+          deckTitle: deckTitle,
+        });
 
-      setQuestion('');
-      setAnswer('');
-      console.log('Deck added successfully with ID:', newDeckRef.id);
-    } catch (error) {
-      console.error('Error adding deck', error);
+        setQuestion('');
+        setAnswer('');
+        console.log('Deck added successfully with ID:', newDeckRef.id);
+      } catch (error) {
+        console.error('Error adding deck', error);
+      }
     }
   };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
+        <TextInput
+          style={styles.text}
+          multiline={true}
+          placeholder={deckTitle === '' ? 'Deck Title' : deckTitle}
+          value={deckTitle}
+          onChangeText={setDeckTitle}
+        />
         <TextInput
           style={styles.text}
           multiline={true}
@@ -119,7 +133,7 @@ const AddScreen = () => {
           value={answer}
           onChangeText={setAnswer}
         />
-        <Button title="Add Q&A to Deck" onPress={handleAddDeck} />
+        <Button title="Add Q&A to Deck" onPress={handleAddDeck} disabled={question === '' || answer === '' || deckTitle === ''} />
       </View>
     </TouchableWithoutFeedback>
   );
