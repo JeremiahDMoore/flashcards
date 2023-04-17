@@ -23,7 +23,37 @@ export default function Home({ navigation }) {
   };
 
   const Tab = createBottomTabNavigator();
-  const Stack = createStackNavigator();
+  // const QuizNav = () {
+  //   return (
+  //     <View>
+  //     <TouchableOpacity style={{display: 'none'}}>
+  //     <Tab.Screen
+  //     name="QuizScreen"
+  //     component={QuizScreen}
+  //     options={{
+  //       tabBarVisible: false,
+  //       tabBarLabel: () => null, // Set tabBarLabel to a function that returns null
+  //       tabBarIcon: () => null
+      
+  //     }}
+  //   />
+  //   </TouchableOpacity>
+  //   </View>
+  //   )
+  // }
+
+  // const QuizNav = () => {
+  //   return (
+  //     <Tab.Screen
+  //       name="QuizScreen"
+  //       component={QuizScreen}
+  //       options={{
+  //         tabBarButton: () => null,
+  //         tabBarButtonStyle: { display: 'none' },
+  //       }}
+  //     />
+  //   );
+  // };
 
   return (
     <SafeAreaView style={{ flex: 1, paddingBottom: 16, paddingTop: 20 }}>
@@ -73,18 +103,16 @@ export default function Home({ navigation }) {
       ),
     }}
   />
-    <Tab.Screen
-    name="QuizScreen"
-    component={QuizScreen}
-    options={{
-      tabBarLabel: 'Q',
-      tabBarActiveTintColor: '#9DD0E6',
-      tabBarInactiveTintColor: '#43A3CC',
-      tabBarIcon: ({ color }) => (
-        <Ionicons name="home-outline" size={32} color={color} paddingTop={20} />
-      ),
-    }}
-  />
+<Tab.Screen
+        name="QuizScreen"
+        component={QuizScreen}
+        options={{
+          tabBarButton: () => null,
+          tabBarButtonStyle: { display: 'none' },
+          tabBarActiveTintColor: '#9DD0E6',
+      tabBarInactiveTintColor: '#43A3CC'
+        }}
+        />
     </Tab.Navigator>
     <View style={{ backgroundColor: '#1E5A7F'}}>
 <Button
