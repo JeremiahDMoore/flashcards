@@ -2,10 +2,12 @@ import { View, Text, Button, SafeAreaView } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
 import DecksScreen from './DecksScreen';
 import AddScreen from './AddScreen';
+import QuizScreen from './QuizScreen';
 
 import {
   getAuth,
@@ -21,11 +23,12 @@ export default function Home({ navigation }) {
   };
 
   const Tab = createBottomTabNavigator();
+  const Stack = createStackNavigator();
 
   return (
     <SafeAreaView style={{ flex: 1, paddingBottom: 16, paddingTop: 20 }}>
     <NavigationContainer independent={true} >
-      {/* <Login /> */}
+
     <Tab.Navigator
        screenOptions={{
        headerShown: false,
@@ -70,6 +73,18 @@ export default function Home({ navigation }) {
       ),
     }}
   />
+    <Tab.Screen
+    name="QuizScreen"
+    component={QuizScreen}
+    options={{
+      tabBarLabel: 'Q',
+      tabBarActiveTintColor: '#9DD0E6',
+      tabBarInactiveTintColor: '#43A3CC',
+      tabBarIcon: ({ color }) => (
+        <Ionicons name="home-outline" size={32} color={color} paddingTop={20} />
+      ),
+    }}
+  />
     </Tab.Navigator>
     <View style={{ backgroundColor: '#1E5A7F'}}>
 <Button
@@ -80,8 +95,10 @@ export default function Home({ navigation }) {
     console.log('LOGGED OUT')
   }}
 />
+
 </View>
   </NavigationContainer>
+
   </SafeAreaView>
   );
 }

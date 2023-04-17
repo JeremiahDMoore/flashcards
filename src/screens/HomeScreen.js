@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, Image } from 'react-native';
 import { auth } from "../utils/firebase";
 import { NavigationContainer } from '@react-navigation/native';
+// import AppNavigator from '../components/AppNavigator';
 
 function HomeScreen({ navigation }) {
 // working on Log Out button to be shown on home screen, right now only bottom nav log out button is working
@@ -12,7 +13,7 @@ function HomeScreen({ navigation }) {
 
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Flashcards App: login page</Text>
+        <Image source={ require('../../assets/leon.jpeg') } style={{ width: 225, height: 225, resizeMode: 'cover' }} />
         <NavigationContainer independent={true}>
         <View style={{ backgroundColor: '#1E5A7F'}}>
 <Button
@@ -24,6 +25,7 @@ function HomeScreen({ navigation }) {
   }}
 />
 </View>
+
 </NavigationContainer>
       </View>
     );
