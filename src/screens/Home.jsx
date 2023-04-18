@@ -2,18 +2,17 @@ import { View, Text, Button, SafeAreaView } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
 import DecksScreen from './DecksScreen';
 import AddScreen from './AddScreen';
 import QuizScreen from './QuizScreen';
 
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+// import {
+//   getAuth,
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+// } from "firebase/auth";
 import { auth } from "../utils/firebase";
 
 export default function Home({ navigation }) {
@@ -23,37 +22,6 @@ export default function Home({ navigation }) {
   };
 
   const Tab = createBottomTabNavigator();
-  // const QuizNav = () {
-  //   return (
-  //     <View>
-  //     <TouchableOpacity style={{display: 'none'}}>
-  //     <Tab.Screen
-  //     name="QuizScreen"
-  //     component={QuizScreen}
-  //     options={{
-  //       tabBarVisible: false,
-  //       tabBarLabel: () => null, // Set tabBarLabel to a function that returns null
-  //       tabBarIcon: () => null
-      
-  //     }}
-  //   />
-  //   </TouchableOpacity>
-  //   </View>
-  //   )
-  // }
-
-  // const QuizNav = () => {
-  //   return (
-  //     <Tab.Screen
-  //       name="QuizScreen"
-  //       component={QuizScreen}
-  //       options={{
-  //         tabBarButton: () => null,
-  //         tabBarButtonStyle: { display: 'none' },
-  //       }}
-  //     />
-  //   );
-  // };
 
   return (
     <SafeAreaView style={{ flex: 1, paddingBottom: 16, paddingTop: 20 }}>
@@ -63,10 +31,10 @@ export default function Home({ navigation }) {
        screenOptions={{
        headerShown: false,
         tabBarStyle: {
-          paddingBottom: 10,
-          backgroundColor: '#1E5A7F' // Replace with your desired background color
-    }
-  }}>
+        paddingBottom: 10,
+        backgroundColor: '#1E5A7F' // Replace with your desired background color
+        }
+      }}>
     <Tab.Screen
     name="Home"
     component={HomeScreen}

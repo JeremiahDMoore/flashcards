@@ -1,31 +1,42 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button } from 'react-native';
 
 const QuizScreen = ({ route }) => {
-  // Access the 'decksData' parameter from the route object
-  const { decksData } = route.params;
+// Access the 'decksData' parameter from the route object
+const { decksData } = route.params;
 
-  // Access the 'question' and 'answer' keys from the decksData array
-  const questions = decksData.map((deck) => deck.question);
-  const answers = decksData.map((deck) => deck.answer);
+// Create state variables to keep track of the current question index and whether the answer is being shown
+const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+const [showAnswer, setShowAnswer] = useState(false);
 
-  // Render the questions and answers
-  return (
-    <View>
-      <Text>Questions:</Text>
-      {questions.map((question, index) => (
-        <Text key={`question-${index}`}>{question}</Text>
-      ))}
-      <Text>Answers:</Text>
-      {answers.map((answer, index) => (
-        <Text key={`answer-${index}`}>{answer}</Text>
-      ))}
-    </View>
-  );
+// Access the 'question' and 'answer' keys from the decksData array
+const questions = decksData.map((deck) => deck.question);
+const answers = decksData.map((deck) => deck.answer);
+
+// Define a function to toggle the 'showAnswer' state variable
+const toggleShowAnswer = () => {
+setShowAnswer(!showAnswer);
+};
+
+// Render the current question and the 'Show Answer' button
+return (
+<View>
+<Text>Question:</Text>
+<Text>{questions[currentQuestionIndex]}</Text>
+{!showAnswer && (
+<Button title="Show Answer" onPress={toggleShowAnswer} />
+)}
+{showAnswer && (
+<View>
+<Text>Answer:</Text>
+<Text>{answers[currentQuestionIndex]}</Text>
+</View>
+)}
+</View>
+);
 };
 
 export default QuizScreen;
-
 
 // import React, { useState, useEffect } from 'react';
 // import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
