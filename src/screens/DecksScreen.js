@@ -61,6 +61,7 @@ const DecksScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.deckTitle}>Decks</Text>
       <FlatList
         data={decks}
         renderItem={renderDeckCard}
@@ -92,6 +93,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 8,
+  },
+  deckTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 16,
+    color: '#EBF8FF',
   },
 });
 

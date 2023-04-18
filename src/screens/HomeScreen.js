@@ -73,6 +73,7 @@ function HomeScreen({ navigation }) {
   return (
     <View 
       style={{ 
+        backgroundColor: '#0E2431',
         flex: 1,  
         alignItems: 'center' 
         }}>
@@ -83,7 +84,7 @@ function HomeScreen({ navigation }) {
             fontFamily: 'RobotoMono-Regular',
             paddingTop: 50,
             paddingBottom: 30,
-            color: '#333',
+            color: '#ddd',
             textShadowColor: 'rgba(93, 222, 127, 0.75)',
             textShadowOffset: { width: -1, height: 1 },
             textShadowRadius: 3
@@ -104,7 +105,7 @@ function HomeScreen({ navigation }) {
             fontFamily: 'RobotoMono-Regular',
             paddingTop: 20,
             paddingBottom: 30,
-            color: '#333',
+            color: '#ddd',
             textShadowColor: 'rgba(93, 222, 127, 0.75)',
             textShadowOffset: { width: -1, height: 1 },
             textShadowRadius: 1
