@@ -73,8 +73,13 @@ export default function Login({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text style={{ color: "#fff", fontSize: 30 }}>Login {'\n'}</Text>
+      <View style={{ flex: 1, alignItems: "center", marginVertical: "40%" }}>
+        <Text style={{ color: "#fff", fontSize: 30 }}>Welcome!</Text><Text></Text>
+        <Text style={{ color: "#fff", fontSize: 25 }} >Please Log in or Sign up</Text>
+
+        {errorMessage ? (
+          <Text style={{ color: "yellow", marginTop: 10 }}>{errorMessage}</Text>
+        ) : <Text style={{ color: "#1E5A7F", marginTop: 10 }}>|</Text> }
 
         <MyTextInput
           value={email}
@@ -92,10 +97,6 @@ export default function Login({ navigation }) {
             setPassword(e);
           }}
         />
-
-        {errorMessage ? (
-          <Text style={{ color: "red", marginTop: 10 }}>{errorMessage}</Text>
-        ) : null}
 
         <View style={{ marginBottom: 20 }} />
         <MyBtn
