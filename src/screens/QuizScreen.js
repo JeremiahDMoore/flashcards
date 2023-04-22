@@ -23,19 +23,21 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   // Define a function to handle deleting the current question from the database
   const handleDeleteQuestion = async () => {
     try {
-      await db.collection('decks').doc(deckId).delete();
-      
-      const updatedDecksData = await getDecksData();
-  
-      // If there are no more questions left in the deck, set the current question index back to 0
-      if (updatedDecksData[deckId].questions.length === 0) {
-        setCurrentQuestionIndex(0);
-        setShowAnswer(false);
-        setEndOfDeck(true);
-      }
-  
-      setDecksData(updatedDecksData);
-    } catch (error) {
+      // Get the current user's ID
+      const userId = auth.currentUser.uid;
+      console.log(userId)
+
+      // Delete the current deck from the database 
+      // TODO: Delete the current document from the database (this code is not working 4-22)
+      await db
+        .ref(`users/${userId}/decks/${deckId}`)
+        .remove();
+
+
+      // Update the decksData state variable
+      getDecksData();
+    }
+    catch (error) {
       console.log(error);
     }
   };
@@ -64,7 +66,7 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
           <Text style={styles.answerText}>Answer:</Text>
           <Text style={styles.answer}>{answers[currentQuestionIndex]}</Text>
           <Button title="Delete Question" onPress={handleDeleteQuestion} />
-        </View>
+        </View> 
       )}
       <View style={styles.buttonContainer}>
         <Button
