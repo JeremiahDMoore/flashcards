@@ -47,6 +47,14 @@ function HomeScreen({ navigation }) {
         style={{ 
           width: 225, 
           height: 225, 
+          borderTopLeftRadius: 999,
+          borderTopRightRadius: 999,
+          borderBottomLeftRadius: 999,
+          borderBottomRightRadius: 999,
+          overflow: 'hidden',
+          borderColor: '#333',
+          // borderColor: 'rgba(100, 225, 140, 0.94)',
+          borderWidth: 1,
           resizeMode: 'cover',
           top: 0, 
           }} />
