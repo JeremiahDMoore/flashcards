@@ -1,4 +1,4 @@
-import { View, Text, Button, SafeAreaView } from 'react-native';
+import { View, Button, SafeAreaView } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -7,12 +7,6 @@ import HomeScreen from './HomeScreen';
 import DecksScreen from './DecksScreen';
 import AddScreen from './AddScreen';
 import QuizScreen from './QuizScreen';
-
-// import {
-//   getAuth,
-//   createUserWithEmailAndPassword,
-//   signInWithEmailAndPassword,
-// } from "firebase/auth";
 import { auth } from "../utils/firebase";
 
 export default function Home({ navigation }) {
@@ -91,7 +85,6 @@ export default function Home({ navigation }) {
     console.log('LOGGED OUT')
   }}
 />
-
 </View>
   </NavigationContainer>
 
