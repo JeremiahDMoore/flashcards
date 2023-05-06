@@ -47,8 +47,9 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   
       // If there are more questions in the deck, display the next question. Otherwise, display a message indicating that there are no more questions in the deck.
 
-      const deckRef = db.collection(`decks/${deckId}`);
+      const deckRef = db.collection(`users/${userId}/decks/${deckId}`);
       console.log("deckRef " + deckRef)
+      await deckRef.delete();
 
       var numberOfQuestions = questions.length;
       console.log("numberOfQuestions " + numberOfQuestions)
