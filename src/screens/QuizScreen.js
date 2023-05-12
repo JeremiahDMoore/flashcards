@@ -14,47 +14,54 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   // Access the 'question' and 'answer' keys from the decksData array
   const questions = decksData.map((deck) => deck.question);
   const answers = decksData.map((deck) => deck.answer);
-
+  console.log("yo " + decksData[currentQuestionIndex].id)
   // Define a function to toggle the 'showAnswer' state variable
   const toggleShowAnswer = () => {
     setShowAnswer(!showAnswer);
   };
   const handleDeleteQuestion = async () => {
     try {
-      // Check that there is a current user and deck data is loaded
-      if (!auth.currentUser) {
-        console.log('No user logged in.');
-        return;
-      }
-      if (!decksData || decksData.length === 0) {
-        console.log('No deck data available.');
-        return;
-      }
-      if (currentQuestionIndex == undefined) {
-        currentQuestionIndex === 0;
-        return;
-      }
-  
       // Get the current user's ID and deck ID
       const userId = auth.currentUser.uid;
+      console.log("userId " + userId)
       const deckId = decksData[currentQuestionIndex].id;
+      console.log("deckId " + deckId)
   
-      // Show a confirmation prompt before deleting the deck
-      const confirmed = window.confirm('Are you sure you want to delete this deck?');
-      if (!confirmed) {
-        return;
+      // Get the question and answer ID of the current question being viewed
+      // const questionId = decksData[currentQuestionIndex].questions[currentQuestionIndex].id;
+      // console.log("questionId " + questionId)
+      // const answerId = decksData[currentQuestionIndex].questions[currentQuestionIndex].answer.id;
+      // console.log("answerId " + answerId)
+  
+      // Delete the current question and answer from the database
+      // const questionRef = db.collection(`users/${userId}/decks/${deckId}/questions`).doc(questionId);
+      // console.log("questionRef " + questionRef)
+      // const answerRef = db.collection(`users/${userId}/decks/${deckId}/answers`).doc(answerId);
+      // console.log("answerRef " + answerRef)
+      // await questionRef.delete();
+      // await answerRef.delete();
+      await deckId.delete();
+  
+      // Remove the deleted question and answer from the decksData state variable
+      // decksData[currentQuestionIndex].questions.splice(currentQuestionIndex, 1);
+      // decksData[currentQuestionIndex].answers.splice(currentQuestionIndex, 1);
+  
+      // If there are more questions in the deck, display the next question. Otherwise, display a message indicating that there are no more questions in the deck.
+      if (decksData[currentQuestionIndex].questions.length > 0) {
+        if (currentQuestionIndex === decksData[currentQuestionIndex].questions.length) {
+          setCurrentQuestionIndex(currentQuestionIndex - 1);
+        }
+        getNextQuestion();
+      } else {
+        setQuestionDisplayed(false);
+        setNoQuestions(true);
       }
-  
-      // Delete the current deck from the database
-      const deckRef = db.collection(`users/${userId}/decks`).doc(deckId);
-      await deckRef.delete();
-  
-      // Update the decksData state variable
-      getDecksData();
     } catch (error) {
       console.log(error);
     }
   };
+  
+  
     // Define a function to handle going to the next question or starting over
   const handleNextQuestion = () => {
     if (currentQuestionIndex === questions.length - 1) {
