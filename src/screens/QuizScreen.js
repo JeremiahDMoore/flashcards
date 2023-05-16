@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { db, auth } from '../utils/firebase';
+import DecksScreen from './DecksScreen';
 
 const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   // Access the 'decksData' parameter from the route object
@@ -14,7 +15,6 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   // Access the 'question' and 'answer' keys from the decksData array
   const questions = decksData.map((deck) => deck.question);
   const answers = decksData.map((deck) => deck.answer);
-  console.log("yo " + decksData[currentQuestionIndex].id)
   // Define a function to toggle the 'showAnswer' state variable
   const toggleShowAnswer = () => {
     setShowAnswer(!showAnswer);
@@ -25,13 +25,14 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
       const userId = auth.currentUser.uid;
       console.log("userId " + userId)
       const deckId = decksData[currentQuestionIndex].id;
+      console.log("questions  " + questions.length)
       console.log("deckId " + deckId)
   
       // Get the question and answer ID of the current question being viewed
-      // const questionId = decksData[currentQuestionIndex].questions[currentQuestionIndex].id;
-      // console.log("questionId " + questionId)
-      // const answerId = decksData[currentQuestionIndex].questions[currentQuestionIndex].answer.id;
-      // console.log("answerId " + answerId)
+      const questionId = decksData[currentQuestionIndex].question;
+      console.log("questionId " + questionId)
+      const answerId = decksData[currentQuestionIndex].answer;
+      console.log("answerId " + answerId)
   
       // Delete the current question and answer from the database
       // const questionRef = db.collection(`users/${userId}/decks/${deckId}/questions`).doc(questionId);
@@ -40,21 +41,24 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
       // console.log("answerRef " + answerRef)
       // await questionRef.delete();
       // await answerRef.delete();
-      await deckId.delete();
-  
       // Remove the deleted question and answer from the decksData state variable
       // decksData[currentQuestionIndex].questions.splice(currentQuestionIndex, 1);
       // decksData[currentQuestionIndex].answers.splice(currentQuestionIndex, 1);
   
       // If there are more questions in the deck, display the next question. Otherwise, display a message indicating that there are no more questions in the deck.
-      if (decksData[currentQuestionIndex].questions.length > 0) {
-        if (currentQuestionIndex === decksData[currentQuestionIndex].questions.length) {
+
+      const deckRef = db.collection(`decks/${deckId}`);
+      console.log("deckRef " + deckRef)
+
+      var numberOfQuestions = questions.length;
+      console.log("numberOfQuestions " + numberOfQuestions)
+      if (questions.length > 0) {
+        if (currentQuestionIndex === questions.length) {
           setCurrentQuestionIndex(currentQuestionIndex - 1);
         }
-        getNextQuestion();
+       console.log("Current question index " + currentQuestionIndex)
       } else {
-        setQuestionDisplayed(false);
-        setNoQuestions(true);
+        setEndOfDeck(true);
       }
     } catch (error) {
       console.log(error);
@@ -103,7 +107,6 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
