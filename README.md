@@ -11,4 +11,4 @@ npx expo start
 
 ```
 
-Scan the QR code with your camera app and open in Expo Go to run the app
+Scan the QR code with your camera app and open in Expo Go to run the app!
