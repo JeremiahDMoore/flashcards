@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../utils/firebase';
 import DecksScreen from './DecksScreen';
 
@@ -34,22 +35,8 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
       const answerId = decksData[currentQuestionIndex].answer;
       console.log("answerId " + answerId)
   
-      // Delete the current question and answer from the database
-      // const questionRef = db.collection(`users/${userId}/decks/${deckId}/questions`).doc(questionId);
-      // console.log("questionRef " + questionRef)
-      // const answerRef = db.collection(`users/${userId}/decks/${deckId}/answers`).doc(answerId);
-      // console.log("answerRef " + answerRef)
-      // await questionRef.delete();
-      // await answerRef.delete();
-      // Remove the deleted question and answer from the decksData state variable
-      // decksData[currentQuestionIndex].questions.splice(currentQuestionIndex, 1);
-      // decksData[currentQuestionIndex].answers.splice(currentQuestionIndex, 1);
-  
-      // If there are more questions in the deck, display the next question. Otherwise, display a message indicating that there are no more questions in the deck.
-
-      const deckRef = db.collection(`users/${userId}/decks/${deckId}`);
-      console.log("deckRef " + deckRef)
-      await deckRef.delete();
+      const deckDocRef = doc(db, `users/${userId}/decks/${deckId}`);
+      await deleteDoc(deckDocRef);
 
       var numberOfQuestions = questions.length;
       console.log("numberOfQuestions " + numberOfQuestions)
@@ -68,14 +55,15 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   
   
     // Define a function to handle going to the next question or starting over
-  const handleNextQuestion = () => {
-    if (currentQuestionIndex === questions.length - 1) {
-      setCurrentQuestionIndex(0);
-    } else {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-    setShowAnswer(false);
-  };
+    const handleNextQuestion = () => {
+      if (currentQuestionIndex === questions.length - 1) {
+        setCurrentQuestionIndex(0);
+      } else {
+        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+      }
+      setShowAnswer(false);
+    };
+    
 
   // Render the current question and the 'Show Answer' button
   return (
