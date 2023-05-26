@@ -1,7 +1,8 @@
 node_modules/
 .expo/
 dist/
-src/utils/firebase.js
+
+src\utils\firebase.js
 npm-debug.*
 *.jks
 *.p8
