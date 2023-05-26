@@ -3,7 +3,7 @@ Simple flashcard app made for 100devs cohort for studying questions from The Ban
 
 ## To run locally:
 
-Make sure you are running Node v16.3.0 or higher and have ```expo-cli``` and ```react-native``` installed globally. Make sure you have Expo Go mobile app installed on your iOS and/or Android device. You will need to provide your own firebase config file to ```'src/utils/firebase.js'``` to run locally.
+Make sure you are running Node v16.3.0 or higher and have ```expo-cli``` and ```react-native``` installed globally. Make sure you have ```Expo Go mobile app``` installed on your iOS and/or Android device. You will need to provide your own ```Firebase``` config file to ```'src/utils/firebase.js'``` to run locally.
 
 
 ``` npx expo start ```
