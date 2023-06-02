@@ -6,7 +6,6 @@ import App from './App';
       <>
         <StatusBar barStyle="dark-content" />
         <View style={{ backgroundColor: 'red', flex: 1 }}>
-          {/* Your app's content goes here */}
         </View>
       </>
     );
