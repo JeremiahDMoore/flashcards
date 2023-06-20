@@ -24,10 +24,11 @@ const AddScreen = () => {
           date: serverTimestamp(),
           deckTitle: deckTitle,
         });
-
         setQuestion('');
         setAnswer('');
-        console.log('Deck added successfully with ID:', newDeckRef.id);
+        Alert.alert('✅', 'Added successfully');
+
+        // console.log('Deck added successfully with ID:', newDeckRef.id);
       } catch (error) {
         console.error('Error adding deck', error);
       }

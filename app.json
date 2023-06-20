@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "firebase-rn",
-    "slug": "firebase-rn",
+    "name": "Flashcards Study App",
+    "slug": "FlashcardsStudyApp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.acesuplasvegas.FlashcardsStudyApp",
+      "bitcode": false
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.acesuplasvegas.FlashcardsStudyApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "284b10f8-2a8e-4fd5-877c-a11b2d38a545"
+      }
     }
   }
 }

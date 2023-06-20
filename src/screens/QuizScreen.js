@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import { collection, getDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../utils/firebase';
 import DecksScreen from './DecksScreen';
 
@@ -11,7 +11,7 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [endOfDeck, setEndOfDeck] = useState(false);
-  console.log(decksData[currentQuestionIndex].id)
+  // console.log(decksData[currentQuestionIndex].id)
 
   // Access the 'question' and 'answer' keys from the decksData array
   const questions = decksData.map((deck) => deck.question);
@@ -20,40 +20,63 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   const toggleShowAnswer = () => {
     setShowAnswer(!showAnswer);
   };
+
+  const userId = auth.currentUser.uid;
+  console.log("userId " + userId)
+  // ...
+
   const handleDeleteQuestion = async () => {
     try {
       // Get the current user's ID and deck ID
-      const userId = auth.currentUser.uid;
-      console.log("userId " + userId)
+   
       const deckId = decksData[currentQuestionIndex].id;
       console.log("questions  " + questions.length)
       console.log("deckId " + deckId)
-  
-      // Get the question and answer ID of the current question being viewed
-      const questionId = decksData[currentQuestionIndex].question;
-      console.log("questionId " + questionId)
-      const answerId = decksData[currentQuestionIndex].answer;
-      console.log("answerId " + answerId)
+
+        // Get the question and answer ID of the current question being viewed
+        const questionId = decksData[currentQuestionIndex].question;
+        console.log("questionId " + questionId)
+        const answerId = decksData[currentQuestionIndex].answer;
+        console.log("answerId " + answerId)
   
       const deckDocRef = doc(db, `users/${userId}/decks/${deckId}`);
-      await deleteDoc(deckDocRef);
+        // Check if document exists
+        const docSnap = await getDoc(deckDocRef);
+        // If the document exists, delete it
+        if (docSnap.exists() ) {
+          await deleteDoc(deckDocRef);
+          Alert.alert('🗑️', 'Q and A deleted');
+        } else {
+          navigator.navigate('DecksScreen')
+
+          console.log('No such document exists');
+          return;
+        }
+
+    
+  
+      // const deckDocRef = doc(db, `users/${userId}/decks/${deckId}`);
+      // await deleteDoc(deckDocRef);
+      // Alert.alert('🗑️', 'Q and A deleted');
 
       var numberOfQuestions = questions.length;
       console.log("numberOfQuestions " + numberOfQuestions)
       if (questions.length > 0) {
         if (currentQuestionIndex === questions.length) {
           setCurrentQuestionIndex(currentQuestionIndex - 1);
+        } else {
+          setCurrentQuestionIndex(0);
+
         }
-       console.log("Current question index " + currentQuestionIndex)
       } else {
         setEndOfDeck(true);
+        console.log("Current question index " + currentQuestionIndex)
+
       }
     } catch (error) {
       console.log(error);
     }
   };
-  
-  
     // Define a function to handle going to the next question or starting over
     const handleNextQuestion = () => {
       if (currentQuestionIndex === questions.length - 1) {
@@ -63,7 +86,6 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
       }
       setShowAnswer(false);
     };
-    
 
   // Render the current question and the 'Show Answer' button
   return (
