@@ -5,7 +5,7 @@ Simple flashcard app made for 100devs cohort for studying questions from The Ban
 
 Make sure you are running Node v16.3.0 or higher and have ```expo-cli``` and ```react-native``` installed globally. Make sure you have ```Expo Go mobile app``` installed on your iOS and/or Android device. You will need to provide your own ```Firebase``` config file to ```'src/utils/firebase.js'``` to run locally.
 
-
+``` npm install ```
 ``` npx expo start ```
 
 Scan the QR code with your camera app and open in Expo Go to run the app!
