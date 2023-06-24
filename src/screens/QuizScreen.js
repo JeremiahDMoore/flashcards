@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, Button, StyleSheet, Alert, ScrollView } from 'react-native';
 import { getDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../utils/firebase';
 
@@ -56,10 +56,12 @@ const QuizScreen = ({ route }) => {
     );
   }
 
-  // Render the current question and the 'Show Answer' button
-  return (
-    <View style={styles.container}>
-      <Text style={styles.questionText}>Question:</Text>
+// ...
+// Render the current question and the 'Show Answer' button
+return (
+  // We wrap everything in the ScrollView
+  <ScrollView contentContainerStyle={styles.container} style={{ backgroundColor: '#0E2431' }} >
+    <Text style={styles.questionText}>Question:</Text>
       <Text style={styles.question}>{questions[currentQuestionIndex]}</Text>
       {!showAnswer && (
         <Button title="Show Answer" onPress={toggleShowAnswer} />
@@ -84,26 +86,26 @@ const QuizScreen = ({ route }) => {
           onPress={handleNextQuestion}
         />
       </View>
-    </View>
-  );
-};
+  </ScrollView>
+);
+}
 
 const styles = StyleSheet.create({
-  noDataContainer: {
-    flex: 1,
+  container: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0E2431',
+  },
+  noDataContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    backgroundColor: '#0E2431'
   },
   noDataText: {
     fontSize: 32,
     color: 'red',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#0E2431',
   },
   questionText: {
     fontSize: 24,
