@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput } from "react-native";
 
-function MyTextInput({ value, onChange, placeholder }) {
+function MyTextInput({ value, onChangeText, placeholder, secureTextEntry }) {
   return (
     <TextInput
       style={{
@@ -15,9 +15,12 @@ function MyTextInput({ value, onChange, placeholder }) {
       }}
       value={value}
       placeholder={placeholder}
-      onChangeText={(e) => {
-        onChange(e);
-      }}
+      secureTextEntry={secureTextEntry} // Secure text entry for password inputs
+      onChangeText={onChangeText} // Handler for text changes
+
+      // onChangeText={(e) => {
+      //   onChange(e);
+      // }}
     />
   );
 }

@@ -15,18 +15,22 @@ export default function Login({ navigation }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSignup = async () => {
-    if (!validateEmail(email)) {
+    // Using trim to remove leading and trailing whitespaces
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!validateEmail(trimmedEmail)) {
       setErrorMessage("Invalid email address.");
       return;
     }
 
-    if (password.length < 6) {
+    if (trimmedPassword.length < 6) {
       setErrorMessage("Password must be at least 6 characters.");
       return;
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, trimmedPassword);
       const user = userCredential.user;
       console.log("user data,", user);
     } catch (error) {
@@ -37,18 +41,22 @@ export default function Login({ navigation }) {
   };
 
   const handleLogin = async () => {
-    if (!validateEmail(email)) {
+    // Using trim to remove leading and trailing whitespaces
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
+    if (!validateEmail(trimmedEmail)) {
       setErrorMessage("Invalid email address.");
       return;
     }
 
-    if (password.length < 6) {
+    if (trimmedPassword.length < 6) {
       setErrorMessage("Password must be at least 6 characters.");
       return;
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword);
       const user = userCredential.user;
       console.log("user data,", user);
     } catch (error) {
@@ -74,27 +82,28 @@ export default function Login({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={{ flex: 1, alignItems: "center", marginVertical: "40%" }}>
-        <Text style={{ color: "#fff", fontSize: 30 }}>Welcome!</Text><Text></Text>
+        <Text style={{ color: "#fff", fontSize: 30 }}>Welcome!</Text>
         <Text style={{ color: "#fff", fontSize: 25 }} >Please Log in or Sign up</Text>
 
         {errorMessage ? (
           <Text style={{ color: "yellow", marginTop: 10 }}>{errorMessage}</Text>
-        ) : <Text style={{ color: "#1E5A7F", marginTop: 10 }}>|</Text> }
+        ) : null }
 
         <MyTextInput
           value={email}
           placeholder={"Email"}
           backgroundColor={"#fff"}
-          onChange={(e) => {
-            setEmail(e);
+          onChangeText={(text) => {
+            setEmail(text);
           }}
         />
 
         <MyTextInput
           value={password}
           placeholder={"Password"}
-          onChange={(e) => {
-            setPassword(e);
+          secureTextEntry // Setting this property to true will make the password show as dots
+          onChangeText={(text) => {
+            setPassword(text);
           }}
         />
 

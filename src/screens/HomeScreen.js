@@ -7,6 +7,9 @@ import LinkButton from '../components/LinkButton';
 function HomeScreen({ navigation }) {
   const [fontLoaded, setFontLoaded] = React.useState(false);
 
+  // Add state to hold the logged in user's email
+  const [userEmail, setUserEmail] = React.useState('');
+
   const loadFont = async () => {
     await Font.loadAsync({
       'RobotoMono-Regular': require('../../assets/fonts/RobotoMono-Regular.ttf'),
@@ -16,6 +19,13 @@ function HomeScreen({ navigation }) {
 
   React.useEffect(() => {
     loadFont();
+
+    // Check if a user is currently logged in
+    if(auth.currentUser) {
+      // If a user is logged in, set the email in state
+      setUserEmail(auth.currentUser.email);
+    }
+
   }, []);
 
   const signOut = async () => {
@@ -73,9 +83,23 @@ function HomeScreen({ navigation }) {
           }}>Flashcards Study App</Text>   
       ) : null}
 
-<LinkButton url="https://leonnoel.com/100devs/" buttonText="More Information" />
-        </View>
-    );
-  }
+{fontLoaded && userEmail ? (
+        <Text 
+          style={{
+            fontSize: 16,
+            fontFamily: 'RobotoMono-Regular',
+            paddingTop: 20,
+            paddingBottom: 30,
+            color: '#ddd',
+            textShadowColor: 'rgba(93, 222, 127, 0.75)',
+            textShadowOffset: { width: -1, height: 1 },
+            textShadowRadius: 1
+          }}>User: {userEmail}</Text>   
+      ) : null}
+      <LinkButton url="https://leonnoel.com/100devs/" buttonText="More Information" />
+
+    </View>
+  );
+}
 
 export default HomeScreen;
