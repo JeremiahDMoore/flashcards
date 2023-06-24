@@ -7,10 +7,8 @@ import Login from "./src/screens/Login";
 const Stack = createNativeStackNavigator();
 
 const MyTheme = {
- 
   colors: { 
     background:'#1E5A7F',
-    
   },
 };
 

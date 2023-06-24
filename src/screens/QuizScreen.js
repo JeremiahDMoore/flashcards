@@ -1,85 +1,60 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, Alert } from 'react-native';
-import { collection, getDoc, doc, deleteDoc } from 'firebase/firestore';
+import { getDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../utils/firebase';
-import DecksScreen from './DecksScreen';
 
-const QuizScreen = ({ route, getDecksData, setDecksData }) => {
-  // Access the 'decksData' parameter from the route object
-  const { decksData, deckId } = route.params;
-  // Create state variables to keep track of the current question index and whether the answer is being shown
+const QuizScreen = ({ route }) => {
+  const { decksData } = route.params;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
-  const [endOfDeck, setEndOfDeck] = useState(false);
-  // console.log(decksData[currentQuestionIndex].id)
 
-  // Access the 'question' and 'answer' keys from the decksData array
+  const userId = auth.currentUser.uid;
+
   const questions = decksData.map((deck) => deck.question);
   const answers = decksData.map((deck) => deck.answer);
-  // Define a function to toggle the 'showAnswer' state variable
+
   const toggleShowAnswer = () => {
     setShowAnswer(!showAnswer);
   };
 
-  const userId = auth.currentUser.uid;
-  console.log("userId " + userId)
-  // ...
-
   const handleDeleteQuestion = async () => {
     try {
-      // Get the current user's ID and deck ID
-      const deckId = decksData[currentQuestionIndex].id;
-      console.log("questions  " + questions.length)
-      console.log("deckId " + deckId)
-
-      // Get the question and answer ID of the current question being viewed
-      const questionId = decksData[currentQuestionIndex].question;
-      console.log("questionId " + questionId)
-      const answerId = decksData[currentQuestionIndex].answer;
-      console.log("answerId " + answerId)
+      const deckId = decksData[currentQuestionIndex]?.id;
       const deckDocRef = doc(db, `users/${userId}/decks/${deckId}`);
 
-      // Check if document exists
       const docSnap = await getDoc(deckDocRef);
-        // If the document exists, delete it
-        if (docSnap.exists() ) {
-          await deleteDoc(deckDocRef);
-          Alert.alert('🗑️', 'Q and A deleted');
-        } else {
-          navigator.navigate('DecksScreen')
-          console.log('No such document exists');
-          return;
-        }
-      // const deckDocRef = doc(db, `users/${userId}/decks/${deckId}`);
-      // await deleteDoc(deckDocRef);
-      // Alert.alert('🗑️', 'Q and A deleted');
-      var numberOfQuestions = questions.length;
-      console.log("numberOfQuestions " + numberOfQuestions)
-      if (questions.length > 0) {
-        if (currentQuestionIndex === questions.length) {
-          setCurrentQuestionIndex(currentQuestionIndex - 1);
-        } else {
-          setCurrentQuestionIndex(0);
-
+      if (docSnap.exists()) {
+        await deleteDoc(deckDocRef);
+        Alert.alert('🗑️', 'Q and A deleted');
+        if (currentQuestionIndex > 0) {
+          setCurrentQuestionIndex((prevIndex) => prevIndex - 1);
         }
       } else {
-        setEndOfDeck(true);
-        console.log("Current question index " + currentQuestionIndex)
-
+        console.log('No such document exists');
       }
     } catch (error) {
       console.log(error);
     }
   };
-    // Define a function to handle going to the next question or starting over
-    const handleNextQuestion = () => {
-      if (currentQuestionIndex === questions.length - 1) {
-        setCurrentQuestionIndex(0);
-      } else {
-        setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
-      }
-      setShowAnswer(false);
-    };
+
+  const handleNextQuestion = () => {
+    if (currentQuestionIndex === questions.length - 1) {
+      setCurrentQuestionIndex(0);
+    } else {
+      setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
+    }
+    setShowAnswer(false);
+  };
+
+  // If there's no data, return "NO DATA"
+  if (!decksData || decksData.length === 0) {
+    return (
+      <View style={styles.noDataContainer}>
+        <Text style={styles.noDataText}>DECK IS EMPTY</Text>
+        <Text style={{ color: '#fff'}}>Please add or select a new deck</Text>
+      </View>
+    );
+  }
 
   // Render the current question and the 'Show Answer' button
   return (
@@ -114,6 +89,16 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
 };
 
 const styles = StyleSheet.create({
+  noDataContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#0E2431',
+  },
+  noDataText: {
+    fontSize: 32,
+    color: 'red',
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
