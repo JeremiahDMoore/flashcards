@@ -28,37 +28,31 @@ const QuizScreen = ({ route, getDecksData, setDecksData }) => {
   const handleDeleteQuestion = async () => {
     try {
       // Get the current user's ID and deck ID
-   
       const deckId = decksData[currentQuestionIndex].id;
       console.log("questions  " + questions.length)
       console.log("deckId " + deckId)
 
-        // Get the question and answer ID of the current question being viewed
-        const questionId = decksData[currentQuestionIndex].question;
-        console.log("questionId " + questionId)
-        const answerId = decksData[currentQuestionIndex].answer;
-        console.log("answerId " + answerId)
-  
+      // Get the question and answer ID of the current question being viewed
+      const questionId = decksData[currentQuestionIndex].question;
+      console.log("questionId " + questionId)
+      const answerId = decksData[currentQuestionIndex].answer;
+      console.log("answerId " + answerId)
       const deckDocRef = doc(db, `users/${userId}/decks/${deckId}`);
-        // Check if document exists
-        const docSnap = await getDoc(deckDocRef);
+
+      // Check if document exists
+      const docSnap = await getDoc(deckDocRef);
         // If the document exists, delete it
         if (docSnap.exists() ) {
           await deleteDoc(deckDocRef);
           Alert.alert('🗑️', 'Q and A deleted');
         } else {
           navigator.navigate('DecksScreen')
-
           console.log('No such document exists');
           return;
         }
-
-    
-  
       // const deckDocRef = doc(db, `users/${userId}/decks/${deckId}`);
       // await deleteDoc(deckDocRef);
       // Alert.alert('🗑️', 'Q and A deleted');
-
       var numberOfQuestions = questions.length;
       console.log("numberOfQuestions " + numberOfQuestions)
       if (questions.length > 0) {
