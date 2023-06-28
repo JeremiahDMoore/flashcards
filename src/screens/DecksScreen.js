@@ -1,58 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { View, FlatList, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { collection, query, orderBy, onSnapshot, where } from 'firebase/firestore'; // Import the 'where' function from firestore
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore'; 
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../utils/firebase';
-import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
+import { useNavigation } from '@react-navigation/native';
 
 const DecksScreen = () => {
-  const [decks, setDecks] = useState([]);
+  const [decks, setDecks] = React.useState([]);
   const [user] = useAuthState(auth);
-  const navigation = useNavigation(); // Get the navigation object from the hook
+  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      query(collection(db, `users/${user.uid}/decks`), orderBy('date', 'desc')),
+      query(collection(db, `users/${user.uid}/decks`), orderBy('deckTitle', 'asc')),
       (snapshot) => {
-        const decksData = [];
-        const uniqueDecks = new Set();
+        const decksData = new Map();
         snapshot.forEach((doc) => {
           const deck = { ...doc.data(), id: doc.id };
-          if (!uniqueDecks.has(deck.deckTitle)) {
-            uniqueDecks.add(deck.deckTitle);
-            decksData.push(deck);
+          const deckTitle = deck.deckTitle;
+
+          if (!decksData.has(deckTitle)) {
+            decksData.set(deckTitle, []);
           }
+
+          decksData.get(deckTitle).push(deck);
         });
-        setDecks(decksData);
+        
+        setDecks(Array.from(decksData, ([deckTitle, decks]) => ({ deckTitle, decks })));
       }
     );
 
     return () => unsubscribe();
   }, []);
 
-  const handleDeckPress = (deckTitle) => {
-    const queryRef = query(
-      collection(db, `users/${user.uid}/decks`),
-      where('deckTitle', '==', deckTitle)
-    );
-
-    const unsubscribe = onSnapshot(queryRef, (snapshot) => {
-      const decksData = [];
-      snapshot.forEach((doc) => {
-        const deck = { ...doc.data(), id: doc.id };
-        decksData.push(deck);
-      });
-      navigation.navigate('QuizScreen', { deckTitle, decksData });
-    });
-
-    return () => unsubscribe();
+  const handleDeckPress = (deck) => {
+    navigation.navigate('QuizScreen', { deckTitle: deck.deckTitle, decksData: deck.decks });
   };
 
   const renderDeckCard = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.cardContainer}
-        onPress={() => handleDeckPress(item.deckTitle)}
+        onPress={() => handleDeckPress(item)}
       >
         <Text style={styles.cardTitle}>{item.deckTitle}</Text>
       </TouchableOpacity>
@@ -62,15 +51,22 @@ const DecksScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.deckTitle}>Decks</Text>
-      <FlatList
-        data={decks}
-        renderItem={renderDeckCard}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContentContainer}
-      />
+      {decks.length === 0 ? (
+        <Text style={styles.noDeckText}>Please add a new deck</Text>
+      ) : (
+        <FlatList
+          data={decks}
+          renderItem={renderDeckCard}
+          keyExtractor={(item) => item.deckTitle}
+          contentContainerStyle={styles.listContentContainer}
+        />
+      )}
     </View>
   );
 };
+
+// ... Rest of your code with styles ...
+
 
 const styles = StyleSheet.create({
   container: {
@@ -96,6 +92,13 @@ const styles = StyleSheet.create({
   },
   deckTitle: {
     fontSize: 32,
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 16,
+    color: '#EBF8FF',
+  },
+  noDeckText: {
+    fontSize: 20,
     fontWeight: 'bold',
     marginTop: 16,
     marginBottom: 16,

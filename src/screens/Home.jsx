@@ -1,4 +1,4 @@
-import { View, Button, SafeAreaView } from 'react-native';
+import { View, TouchableOpacity, Text, SafeAreaView } from 'react-native';
 import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -24,10 +24,11 @@ export default function Home({ navigation }) {
     <Tab.Navigator
        screenOptions={{
        headerShown: false,
-        tabBarStyle: {
-        paddingBottom: 10,
-        backgroundColor: '#1E5A7F' // Replace with your desired background color
-        }
+         tabBarStyle: {
+              paddingBottom: Platform.OS === 'android' ? 10 : 0,
+              height: Platform.OS === 'android' ? 80 : 80,
+              backgroundColor: '#1E5A7F', // Replace with your desired background color
+            }
       }}>
     <Tab.Screen
     name="Home"
@@ -76,21 +77,25 @@ export default function Home({ navigation }) {
         }}
         />
     </Tab.Navigator>
-    <View style={{ backgroundColor: '#1E5A7F'}}>
-<Button
-  title="Log out"
-  color="#fff"
-  onPress={() => {
-    signOut();
-    console.log('LOGGED OUT')
-  }}
-/>
+    <View style={{ backgroundColor: '#1E5A7F', paddingVertical: 10 }}>
+  <TouchableOpacity
+    onPress={() => {
+      signOut();
+      console.log('LOGGED OUT')
+    }}
+    style={{
+      backgroundColor: '#1E5A7F',
+      alignItems: 'center',
+      padding: 10
+    }}>
+    <Text style={{ color: '#fff' }}>Log out</Text>
+  </TouchableOpacity>
 </View>
+
   </NavigationContainer>
 
   </SafeAreaView>
   );
 }
-
 
 
