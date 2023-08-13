@@ -1,15 +1,8 @@
-import { AppRegistry, StatusBar, View } from 'react-native';
+import { registerRootComponent } from 'expo';
+
 import App from './App';
 
-
-    return (
-      <>
-        <StatusBar barStyle="dark-content" />
-        <View style={{ backgroundColor: 'red', flex: 1 }}>
-        </View>
-      </>
-    );
-  
-  
-
-AppRegistry.registerComponent('firebase-rn', () => App);
+// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
+// It also ensures that whether you load the app in Expo Go or in a native build,
+// the environment is set up appropriately
+registerRootComponent(App);
